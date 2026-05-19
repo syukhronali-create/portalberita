@@ -9,15 +9,14 @@ router.get('/', async (req, res) => {
     try {
         // Kita pakai JOIN agar nama Kategori dan Penulis ikut tampil, bukan cuma ID-nya saja!
         const query = `
-            SELECT tbl_artikel.id, tbl_artikel.title, tbl_artikel.content, tbl_artikel.image, tbl_artikel.created_at,
-                   tbl_category.name AS category_name, 
-                   tbl_users.username AS author_name
-            FROM tbl_artikel
-            JOIN tbl_category ON tbl_artikel.category_id = tbl_category.id
-            JOIN tbl_users ON tbl_artikel.user_id = tbl_users.id
-            ORDER BY tbl_artikel.created_at DESC
-        `;
-
+          SELECT tbl_artikel.id, tbl_artikel.title, tbl_artikel.content, tbl_artikel.image, tbl_artikel.created_at,
+           tbl_category.name AS category_name, 
+           tbl_users.username AS author_name
+    FROM tbl_artikel
+    LEFT JOIN tbl_category ON tbl_artikel.category_id = tbl_category.id
+    LEFT JOIN tbl_users ON tbl_artikel.user_id = tbl_users.id
+    ORDER BY tbl_artikel.created_at DESC
+`;
         const [rows] = await db.query(query);
         res.json({ success: true, data: rows });
 
